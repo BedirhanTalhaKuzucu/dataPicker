@@ -43,12 +43,17 @@ function App() {
       setYears(years-1)
     }
   }
+
+  const tableMonths = months[dateindex]
+  console.log(tableMonths);
   
   const dt = new Date(months[dateindex] + " 1, " + years)
   return (
     <DateComp value={dt} 
     nextMonth = { nextMonth } months = { months} dateindex={dateindex}
-    prevMonth={prevMonth} />
+    prevMonth={prevMonth}
+    years ={years}
+    tableMonths = {tableMonths} />
   );
 }
 export default App;

@@ -1,10 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import './style.css'
+import Table from 'react-bootstrap/Table'
 
 
-const DateComp = ({ value, nextMonth, months, dateindex, prevMonth }) => {
+const DateComp = ({ value, nextMonth, prevMonth, years, tableMonths }) => {
     const [date, setdate] = useState()
     const [startdate, setstartdate] = useState()
+    const [selectedDate, setselectedDate] = useState(" please select a Date")
+    const [hours, setHours] = useState("please select time")
+    
+
+
     //const [listDate,setListDate]=useState([])
     useEffect(() => {
         if (value) {
@@ -17,29 +23,35 @@ const DateComp = ({ value, nextMonth, months, dateindex, prevMonth }) => {
             setdate(value)
         }
     }, [value])
-   
-    const time = () => {
-        
-        const hourList=[]
-        for (let i = 0; i < 24; i++) {
-            const hour = String(i) 
-            // const minuteList= []
-            let k = 0
-            for (let j = 0; j < 4; j++) {
-                const minute = String(k)
-                hourList.push(hour + ":" +minute)
-                k = k +15
-            }
-            
-        }
-        return hourList
+
+    const showHours = (e) => {
+        setHours(
+            e.target.textContent
+        )
     }
+
+    
+   
+  
     // console.log(time());
 
-    const timeShow = time()
+    const timeShow = useMemo(()=> {
+            const hourList=[]
+            for (let i = 0; i < 24; i++) {
+                const hour = String(i) 
+                // const minuteList= []
+                let k = 0
+                for (let j = 0; j < 4; j++) {
+                    const minute = String(k)
+                    hourList.push(hour + ":" +minute)
+                    k = k +15
+                }
+                
+            }
+            return hourList
         
-  
-
+    }) 
+    
 
     const listdate = useMemo(() => {
 
@@ -68,33 +80,39 @@ const DateComp = ({ value, nextMonth, months, dateindex, prevMonth }) => {
 
 
     return (
-        <div>
-            <table className='table table-bordered '>
-                <thead>
-                    <tr>
-                        <th>Pazartesi</th>
-                        <th>Salı***</th>
-                        <th>Çarşamba***</th>
-                        <th>Perşembe***</th>
-                        <th>Cuma***</th>
-                        <th>Cumartesi**</th>
-                        <th>Pazar**</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {listdate?.map((x, i) => <Satir key={"r" + i} dates={x} />)}
-                </tbody>
-            </table>
-        <button onClick = { prevMonth }>Prev</button>
-        { months[dateindex] }
-        <button onClick = { nextMonth }>Next</button>
-        <br /><br />
-            <div className="scroll-container">
-                {timeShow.map((item, index)=> 
-                <div className="scroll-page" id="page-1" key={index}> 
-                {item}  
-                </div> )}
+        <div className='main'>
+            <div> 
+                <h3>   show date : {selectedDate} ; {hours} </h3>
+            </div>
+            <button onClick = { prevMonth }>Prev</button>
+                    { tableMonths }, {years}
+            <button onClick = { nextMonth }>Next</button>
+            <div className='tablePart'>
                 
+                {/* <table className='table table-bordered ' > */}
+                <Table striped bordered hover size="sm">
+                    <thead>
+                        <tr>
+                            <th>Pazartesi</th>
+                            <th>Salı***</th>
+                            <th>Çarşamba***</th>
+                            <th>Perşembe***</th>
+                            <th>Cuma***</th>
+                            <th>Cumartesi**</th>
+                            <th>Pazar**</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {listdate?.map((x, i) => <Satir key={"r" + i} dates={x} years={years} tableMonths = {tableMonths}
+                        setselectedDate = {setselectedDate }  />)}
+                    </tbody>
+                </Table>
+                <div className="scroll-container">
+                    {timeShow.map((item, index)=> 
+                    <div className="scroll-page" id="page-1" key={index}>
+                        <button className='buttonlist' onClick={(e)=> showHours(e)} >    {item}  </button> 
+                    </div> )}
+                </div>
             </div>
         </div>
         
@@ -105,15 +123,21 @@ const DateComp = ({ value, nextMonth, months, dateindex, prevMonth }) => {
 export default DateComp;
 
 
-const Satir = ({ dates }) => {
-    // const handleClick = (x) => {
-    //     console.log(x)
-    // }
-    // console.log(dates);
+const Satir = ({ dates, years, setselectedDate, tableMonths }) => {
+   
+    const showDate= (e) => {
+        console.log(e.target.textContent);
+        const tag = e.target.textContent
+        const selectedDate =  tableMonths + " " + tag + "," + years
+        setselectedDate(selectedDate)
+    }
 
     return (
         <tr>
-            {dates.map((x, i) => <td key={"g" + i} className="text-center">{new Date(x).getDate()}</td>)}
+            {dates.map((x, i) => 
+            <td key={"g" + i} className="text-center">
+                <button onClick={(e)=> showDate(e)}> {new Date(x).getDate()} </button>    
+            </td>)}
         </tr>
     )
 }

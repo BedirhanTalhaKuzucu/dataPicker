@@ -1,12 +1,20 @@
+/* .main{
+  display: flex;
+} */
+.tablePart{
+  display: flex;
+}
+
 .scroll-container {
+    background-color: aqua;
     display: block;
     margin: 0 auto;
     text-align: center;
 }
  
   .scroll-container {
-    width: 350px;
-    height: 200px;
+    width: 75px;
+    height: 100px;
     overflow-y: scroll;
     scroll-behavior: smooth;
   }
